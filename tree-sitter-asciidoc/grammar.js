@@ -38,9 +38,10 @@ module.exports = grammar({
     // contains its content plus any deeper sections, and each level closes
     // when a heading of the same or higher level appears.  The heading node
     // (`title1`..`title5`) is kept as-is inside the wrapping `section`.
-    // A section body allows content blocks plus any *deeper* section, so an
-    // illegal level skip (e.g. `==` straight to `====`) still nests instead of
-    // erroring; the innermost open section greedily claims a deeper heading.
+    // A section body allows content blocks, comments and attribute entries,
+    // plus any *deeper* section, so an illegal level skip (e.g. `==` straight
+    // to `====`) still nests instead of erroring; the innermost open section
+    // greedily claims a deeper heading.
     _section1: $ =>
       prec.right(
         seq(
@@ -49,6 +50,7 @@ module.exports = grammar({
           repeat(
             choice(
               $._section_comment,
+              $.document_attr,
               alias($._doc_block, $.section_block),
               alias($._section2, $.section),
               alias($._section3, $.section),
@@ -66,6 +68,7 @@ module.exports = grammar({
           repeat(
             choice(
               $._section_comment,
+              $.document_attr,
               alias($._doc_block, $.section_block),
               alias($._section3, $.section),
               alias($._section4, $.section),
@@ -82,6 +85,7 @@ module.exports = grammar({
           repeat(
             choice(
               $._section_comment,
+              $.document_attr,
               alias($._doc_block, $.section_block),
               alias($._section4, $.section),
               alias($._section5, $.section),
@@ -97,6 +101,7 @@ module.exports = grammar({
           repeat(
             choice(
               $._section_comment,
+              $.document_attr,
               alias($._doc_block, $.section_block),
               alias($._section5, $.section),
             ),
@@ -108,7 +113,13 @@ module.exports = grammar({
         seq(
           optional($._block_attrs),
           $.title5,
-          repeat(choice($._section_comment, alias($._doc_block, $.section_block))),
+          repeat(
+            choice(
+              $._section_comment,
+              $.document_attr,
+              alias($._doc_block, $.section_block),
+            ),
+          ),
         ),
       ),
 

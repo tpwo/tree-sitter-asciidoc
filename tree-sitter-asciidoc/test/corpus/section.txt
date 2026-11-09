@@ -106,3 +106,47 @@ content
         (section_block
           (paragraph
             (line)))))))
+
+===========================================
+attribute entries do not interrupt sections
+===========================================
+
+== First
+
+=== Nested
+
+:name: value
+
+content
+
+=== Sibling
+
+more
+
+--------
+
+(document
+  (block_element
+    (section
+      (title1
+        (title_h1_marker)
+        (line))
+      (section
+        (title2
+          (title_h2_marker)
+          (line))
+        (document_attr
+          (document_attr_marker)
+          (attr_name)
+          (document_attr_marker)
+          (line))
+        (section_block
+          (paragraph
+            (line))))
+      (section
+        (title2
+          (title_h2_marker)
+          (line))
+        (section_block
+          (paragraph
+            (line)))))))
